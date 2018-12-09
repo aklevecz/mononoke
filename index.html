@@ -13,10 +13,23 @@
       </style>
   </head>
   <body>
-    hi cutie :)<br />
-    <video controls>
+    hi cutie :)<br /><button id="mono">we want mononoke!</button>
+    <button id="tt">we want totoro!</button><br/>
+    <video id="video" controls>
             <source src="https://raptor_movies.storage.googleapis.com/totoro.mp4">
           Your browser does not support the video tag.
           </video>
+        <script>
+          mono = document.getElementById('mono')
+          tt = document.getElementById('tt')
+
+          video = document.getElementById('video')
+          mono.onclick = function(){
+            video.src='https://raptor_movies.storage.googleapis.com/princessmononke.m4v'
+          }
+          tt.onclick = function(){
+            video.src="https://raptor_movies.storage.googleapis.com/totoro.mp4"
+          }
+        </script>
   </body>
 </html>
