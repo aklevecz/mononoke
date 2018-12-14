@@ -13,10 +13,13 @@
       </style>
   </head>
   <body>
-      <video id="video" controls>
+    gt0
+    <div style="width:80%;border:2px white solid;margin:0 auto;margin-top:2%;">
+      <video style="width:100%" id="gt" poster="./fate_cover.png" controls>
           <source src="https://raptor_movies.storage.googleapis.com/girltrouble.mp4">
         Your browser does not support the video tag.
         </video>
+      </div>
       </br>
     hi cutie :)<br /><button id="mono">we want mononoke!</button>
     <button id="tt">we want totoro!</button><br/>
@@ -32,6 +35,8 @@
           tt = document.getElementById('tt')
 
           video = document.getElementById('video')
+          // gt = document.getElementById('gt')
+          // gt.width=window.innerWidth;
           mono.onclick = function(){
             video.src='https://raptor_movies.storage.googleapis.com/princessmononke.m4v'
           }
