@@ -1,55 +1,145 @@
 <!DOCTYPE html>
-<html prefix="og: http://ogp.me/ns#">
-<head>
-<title>raptor</title>
-<link rel="shortcut icon" type="image/x-icon" href="./static/raptor_flower.png">
-<meta property="og:title" content="raptor" />
-<meta property="og:url" content="https://raptor.pizza" />
-
-<meta property="og:image" content="./static/raptor_flower.png" />
-      <style>
-        body {
-          text-align:center;
-          background-color: black;
-          color:white;
-        }
-      </style>
-  </head>
-  <body>
-      <div style="width:80%;border:2px white solid;margin:0 auto;margin-top:2%;">
-          <video style="width:100%" id="gt" poster="https://images-na.ssl-images-amazon.com/images/I/71bsHTr6idL._SL1500_.jpg" controls>
-              <source src="https://raptor_movies.storage.googleapis.com/interstella5s.m4v">
-            Your browser does not support the video tag.
-            </video>
-          </div>
-    <div style="width:80%;border:2px white solid;margin:0 auto;margin-top:2%;">
-      <video style="width:100%" id="gt" poster="./static/fate_cover.png" controls>
-          <source src="https://raptor_movies.storage.googleapis.com/girltrouble.mp4">
-        Your browser does not support the video tag.
-        </video>
-      </div>
-<button id="mono">we want mononoke!</button>
-    <button id="tt">we want totoro!</button><br/>
-    <video id="video" poster="https://media.giphy.com/media/Up0NsMRidfOso/giphy.gif" controls>
-            <source src="">
-          Your browser does not support the video tag.
-          </video>
-        </br>
-
-
+<html>
+    <body style="margin:0">
+        <canvas id="meCanvas"/>
+        <video id="video" muted src="https://raptor_movies.storage.googleapis.com/girltrouble.mp4" />
+        <img id="img" src="static/raptor_flower.png"/>
         <script>
-          mono = document.getElementById('mono')
-          tt = document.getElementById('tt')
+            var width,height
+            var canvas, ctx
+            var gradient
+            var raptorFlower
+            var drawVideo
 
-          video = document.getElementById('video')
-          // gt = document.getElementById('gt')
-          // gt.width=window.innerWidth;
-          mono.onclick = function(){
-            video.src='https://raptor_movies.storage.googleapis.com/princessmononke.m4v'
-          }
-          tt.onclick = function(){
-            video.src="https://raptor_movies.storage.googleapis.com/totoro.mp4"
-          }
+            var video  = document.getElementById('video');
+            document.body.addEventListener("click", function(){
+                video.play()
+                setTimeout(resize,1)
+            })
+            video.addEventListener('play', function () {
+                var $this = this; //cache
+
+                console.log(video.videoHeight, canvas.height)
+
+                drawVideo = true
+
+                // (function loop() {
+                //     if (!$this.paused && !$this.ended) {
+                //         //ctx.drawImage($this, -width/2.1, 0);
+
+
+                //         ctx.drawImage($this, 0, 0);
+
+                //         setTimeout(loop, 1000 / 60); // drawing at 30fps
+                //     }
+                // })();
+            }, 0);
+
+            init()
+            function init (){
+                width = window.innerWidth
+                height = window.innerHeight
+
+                canvas = document.getElementById('meCanvas')
+                canvas.height = height
+                canvas.width = width
+
+                ctx = canvas.getContext("2d")
+
+                gradient = ctx.createLinearGradient(0,0,width/2,0)
+                gradient.addColorStop(0, "purple")
+                gradient.addColorStop(1, "pink")
+
+                ctx.fillStyle = gradient
+                ctx.fillRect(0,0,width,height)
+
+                raptorFlower = document.getElementById('img')
+                raptorFlower.addEventListener("load", function(){
+                    ctx.drawImage(this,
+                                  width/2-this.width/4,
+                                  height/2-this.height/4,
+                                  height/2,height/2
+                                  )
+   
+                })
+
+
+            }
+
+
+            window.addEventListener("resize", resize)
+            function resize(){
+                console.log('resize')
+                width = window.innerWidth
+                height = window.innerHeight
+                if (video.videoHeight > canvas.height){
+                console.log('wa')
+                canvas.height = video.videoHeight;
+                canvas.width = video.videoWidth;
+                console.log(canvas.height)
+                }
+                gradient = ctx.createLinearGradient(0,0,width/2,0)
+                gradient.addColorStop(0, "purple")
+                gradient.addColorStop(1, "pink")
+                ctx.fillStyle = gradient
+                ctx.fillRect(0,0,width,height)
+                
+                if (width < height) ctx.rotate(90 * Math.PI / 180);
+            }
+
+var fps = 60;
+var now;
+var then = Date.now();
+var interval = 1000/fps;
+var delta;
+  
+function draw() {
+     
+    requestAnimationFrame(draw);
+     
+    now = Date.now();
+
+    delta = now - then;
+     
+    if (delta > interval) {
+        // update time stuffs
+         
+        // Just `then = now` is not enough.
+        // Lets say we set fps at 10 which means
+        // each frame must take 100ms
+        // Now frame executes in 16ms (60fps) so
+        // the loop iterates 7 times (16*7 = 112ms) until
+        // delta > interval === true
+        // Eventually this lowers down the FPS as
+        // 112*10 = 1120ms (NOT 1000ms).
+        // So we have to get rid of that extra 12ms
+        // by subtracting delta (112) % interval (100).
+        // Hope that makes sense.
+         
+        then = now - (delta % interval);
+        
+        var color = drawVideo ? "black" : "pink"
+        // gradient.addColorStop(.5*(1+Math.cos(now*Math.PI*5)), "purple")
+        gradient.addColorStop((.5*(1+Math.sin(now*Math.PI*5))), color)
+        // ctx.fillStyle = gradient
+        //         ctx.fillRect(0,0,width,height)
+        if (!raptorFlower) return
+        if (now % 40 === 0 ) {
+                ctx.drawImage(raptorFlower,
+                                  width*Math.random()-200,
+                                  height*Math.random()-200,
+                                  height/2,height/2
+                                  )
+        }
+        
+        var push = width < height ? -1090 : 0
+
+           if (drawVideo) ctx.drawImage(video, 0, push);
+
+    }
+}
+ 
+draw();
         </script>
-  </body>
+    </body>
 </html>
